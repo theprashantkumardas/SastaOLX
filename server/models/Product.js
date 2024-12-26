@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
 
 // Create and export the Product model based on the Schema
 module.exports = mongoose.model('Product', productSchema);
-
+ //                                  |__> productSchema is exported in the name of "Product" variable
 
 
 //ref: 'User': -> This is a reference to the User model. It links the product to the user who listed it.

@@ -8,6 +8,6 @@ const router = express.Router(); //Initialize the router
 router.post('/register', register);
 
 //Route to login an existing user
-router.post('login', login);
+router.post('/login', login);
 
 module.exports = router; //Export the router to use in server.js

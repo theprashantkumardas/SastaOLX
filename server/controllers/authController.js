@@ -15,7 +15,7 @@ exports.register = async(req, res) => {
         }
 
         //Hash the User's password
-        const hashedPassword = await bcrypt.hash(password, 108);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         //Create a new user document 
         const user = new User({ name, email, password: hashedPassword});
@@ -24,10 +24,10 @@ exports.register = async(req, res) => {
         await user.save();
 
         //Generate a JWT token for te user
-        const token = jwt.sign({ userId: user_id}, process.env.JWT_SECRET, { expiresIn: '1h'});
-
+        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, { expiresIn: '2h'});
+        console.log("Token:", token);
         //Retuen the token and User ID as a response
-        res.status(201).json({ token, userId: user_id});
+        res.status(201).json({ token, userId: user._id});
 
     } catch(error) {
         res.status(500).json({ message: "Server Error"}); //Handle server errors
@@ -54,10 +54,10 @@ exports.login = async(req, res) => {
         }
 
         //Generate a JWT token for the user
-        const token = jwt.sign({ userId: user_id}, process.env.JWT_SECRET , { expiresIn: '1hr'});
+        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET , { expiresIn: '1hr'});
 
         //Return the token and user ID 
-        res.status(200).json({ token, userId: user_id});
+        res.status(200).json({ token, userId: user._id});
 
     } catch(error) {
         res.status(500).json({ message: "Server Error"}); //Handle Server errors
