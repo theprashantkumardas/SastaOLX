@@ -14,6 +14,15 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    role: {
+        type: String,
+        enum: ['buyer', 'seller', 'both'],  // Defines the possible roles
+        default: 'buyer',  // Default role is buyer
+    },
+    profileImage: {  // Optional, if you want users to upload a profile image
+        type: String,
+        default: ''  // Default image URL or empty if no profile image is set
     }
 });
 

@@ -5,7 +5,7 @@ const User = require('../models/User') //User model
 
 //Register a new user
 exports.register = async(req, res) => {
-    const { name , email, password } = req.body;
+    const { name, email, password, role } = req.body; // Included 'role' in the request body
 
     try {
         //Check if user is already exists 
@@ -17,19 +17,26 @@ exports.register = async(req, res) => {
         //Hash the User's password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        //Create a new user document 
-        const user = new User({ name, email, password: hashedPassword});
+        //Create a new user document with role
+        const user = new User({ name, email, password: hashedPassword, role });
 
         //Wait till the User saved to database
         await user.save();
 
-        //Generate a JWT token for te user
-        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, { expiresIn: '2h'});
+        // Generate a JWT token with userId and role
+        const token = jwt.sign(
+            { userId: user._id, role: user.role }, // Included role in the token payload
+            process.env.JWT_SECRET,
+            { expiresIn: '2h' }
+        );
+
         console.log("Token:", token);
-        //Retuen the token and User ID as a response
-        res.status(201).json({ token, userId: user._id});
+
+        // Return the token and user ID as a response
+        res.status(201).json({ token, userId: user._id, role: user.role });
 
     } catch(error) {
+        console.error("Registration Error:", error);
         res.status(500).json({ message: "Server Error"}); //Handle server errors
 
     }
@@ -53,13 +60,18 @@ exports.login = async(req, res) => {
             return res.status(400).json({ message: "Invalid credentials"}) //If password does not matches
         }
 
-        //Generate a JWT token for the user
-        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET , { expiresIn: '1hr'});
+        // Generate a JWT token with userId and role
+        const token = jwt.sign(
+            { userId: user._id, role: user.role }, // Include role in the token payload
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
 
-        //Return the token and user ID 
-        res.status(200).json({ token, userId: user._id});
+        // Return the token, user ID, and role
+        res.status(200).json({ token, userId: user._id, role: user.role });
 
     } catch(error) {
+        console.error("Login Error:", error);
         res.status(500).json({ message: "Server Error"}); //Handle Server errors
 
     }
