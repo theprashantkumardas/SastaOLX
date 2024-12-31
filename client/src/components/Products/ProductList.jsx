@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate();
   // Fetch products from the server
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,7 +31,11 @@ const ProductList = () => {
     fetchProducts();
   }, []); // Run once after the component mounts
 
-  return (
+  const handleProductClick = (product) => {
+    navigate(`/product/${product._id}`, { state: { product , userId: "currentUserId"} });
+  };
+
+   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-wrap justify-center">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center w-full">
         Product List
@@ -44,6 +49,7 @@ const ProductList = () => {
             <div
               key={product._id}
               className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition duration-200"
+              onClick={() => handleProductClick(product)} // Navigate to ProductDetail
             >
               <img
                 className="p-8 rounded-t-lg"
@@ -61,9 +67,6 @@ const ProductList = () => {
                   <span className="text-3xl font-bold text-gray-900">
                     ${product.price}
                   </span>
-                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Add to Cart
-                  </button>
                 </div>
               </div>
             </div>

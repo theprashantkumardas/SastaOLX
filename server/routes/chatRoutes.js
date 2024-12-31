@@ -1,16 +1,20 @@
-// # API routes for chat system
-
 const express = require('express');
+const { 
+    getSellerChats, 
+    getMessagesForChat, 
+    sendMessage 
+} = require('../controllers/chatController');
+const authMiddleware = require('../middleware/authMiddleware'); // Ensure user is authenticated
+
 const router = express.Router();
-const chatController = require('../controllers/chatController');
 
-// Route to create a chat
-router.post('/create', chatController.createChat);
+// Route to get all chats for the logged-in seller
+router.get('/seller-chats', authMiddleware, getSellerChats);
 
-// Route to get chats for a user
-router.get('/:userId', chatController.getUserChats);
+// Route to fetch all messages for a specific chat
+router.get('/:chatId/messages', authMiddleware, getMessagesForChat);
 
-// Route to send a message
-router.post('/message', chatController.sendMessage);
+// Route to send a message in a specific chat
+router.post('/:chatId/messages', authMiddleware, sendMessage);
 
 module.exports = router;

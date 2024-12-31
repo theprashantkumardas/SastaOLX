@@ -21,6 +21,11 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: true
+    },
+    chatId: {
+        type: mongoose.Schema.ObjectId, // Reference to the Chat model
+        ref: 'Chat',
+        
     }
 });
 

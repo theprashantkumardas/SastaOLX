@@ -6,7 +6,7 @@ const Product = require('../models/Product') //PRoduct model
 
 exports.createProduct = async( req, res ) => {
     const {name, description, price, imageUrl} = req.body;
-    const { userId, role } = req.user; // Extract userId and role from the authentication middleware
+    const { userId, role , chatId} = req.user; // Extract userId and role from the authentication middleware
 
     try {
         // Check if the user has the correct role to create a product
@@ -22,6 +22,7 @@ exports.createProduct = async( req, res ) => {
             price,
             imageUrl,
             sellerId: userId, //associate  product with the logged-in User
+            chatId: chatId
         });
 
         //Save the product to the database

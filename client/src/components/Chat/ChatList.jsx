@@ -1,39 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
-const ChatList = ({ userId, setSelectedChat }) => {
-    const [chats, setChats] = useState([]);
+const ChatList = ({ userId, onSelectChat }) => {
+  const [chats, setChats] = useState([]);
 
-    useEffect(() => {
-        const fetchChats = async () => {
-            try {
-                const response = await axios.get(`http://localhost:7000/api/chat/${userId}`);
-                setChats(response.data);
-            } catch (error) {
-                console.error('Error fetching chats:', error);
-            }
-        };
+  useEffect(() => {
+    // Fetch seller chats
+    const fetchChats = async () => {
+        try {
+          const response = await fetch('/api/chats/seller-chats', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch chats');
+          }
+          const data = await response.json();
+          console.log('Fetched chats:', data); // Debugging
+          setChats(data);
+        } catch (error) {
+          console.error('Error fetching chats:', error);
+        }
+      };
+    fetchChats();
+  }, [userId]);
 
-        fetchChats();
-    }, [userId]);
-
-    return (
-        <div>
-            <h2 className="text-xl font-bold p-4">Chats</h2>
-            <ul>
-                {chats.map((chat) => (
-                    <li
-                        key={chat._id}
-                        className="p-4 border-b cursor-pointer hover:bg-gray-200"
-                        onClick={() => setSelectedChat(chat)}
-                    >
-                        {chat.participants.map((user) => user._id !== userId && user.name).join(', ')}
-                        <p className="text-gray-500 text-sm">{chat.lastMessage}</p>
-                    </li>
-                ))}
-            </ul>
+  return (
+    <div className="h-full overflow-y-auto">
+      {chats.map((chat) => (
+        <div
+          key={chat._id}
+          className="p-4 border-b cursor-pointer hover:bg-gray-100"
+          onClick={() => {
+            console.log('Selected chat:', chat);
+            onSelectChat(chat)
+          }}
+        >
+          <h3 className="font-semibold">{chat.buyer.name}</h3>
+          <p className="text-sm text-gray-500">{chat.product.name}</p>
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default ChatList;

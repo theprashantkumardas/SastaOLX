@@ -6,10 +6,11 @@ const dotenv = require('dotenv'); //To load environment variables
 const authRoutes = require('./routes/authRoutes'); //Auth routes (login, register)
 const productRoutes = require('./routes/productRoutes'); //Auth routes (add product
 const userRoutes = require('./routes/userRoutes'); //User routes (profile management)
+const chatRoutes = require('./routes/chatRoutes');
+const {setupSocket} = require('./socket/socket')
+
 
 const http = require('http');
-const { Server } = require('socket.io');
-const chatSocket = require('./socket/chatSocket');
 
 //Load environment variable
 dotenv.config();
@@ -25,9 +26,7 @@ app.use(express.json());
 app.use(cors());
 
 
-const server = http.createServer(app);                         //Create a server using the Express app
-const io = new Server(server, { cors: { origin: '*' } });      //Create a new instance of the socket.io 
-chatSocket(io);                                                //Pass the socket.io instance to the chatSocket function
+const server = http.createServer(app);        //Create a server using the Express app
 
 //Connect mongoDB using the URI from the environment variable
 mongoose
@@ -39,6 +38,7 @@ mongoose
 app.use('/api/auth' , authRoutes); //Handle authentication routes (register, login)
 app.use('/api/product' , productRoutes); //Handle product routes (add product)
 app.use('/api/user', userRoutes);  // Register user routes for profile management
+app.use('/api/chat', chatRoutes);  //Api routes for chat
 
 //Set the server to listen o-n a specific port (using environment variable or default 8000)
 const PORT = process.env.PORT || 7000;
@@ -46,3 +46,5 @@ app.listen(PORT, () =>{
     console.log("Server is running at port : ", PORT)
 
 });
+
+setupSocket(server); // Set up socket.io

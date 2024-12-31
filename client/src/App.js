@@ -6,7 +6,9 @@ import Login from '../src/components/Login';
 import ProductList from './components/Products/ProductList';
 import AddProduct from './components/Products/AddProduct';
 import Profile from './pages/Profile';
-import ChatPage from './pages/ChatPage'; 
+import ChatPage from './pages/ChatPage';
+import ProductDetail from "./pages/ProductDetailPage"; 
+import ChatWindow from './components/Chat/ChatWindow';
 
 // Main App Component
 const App = () => {
@@ -21,7 +23,9 @@ const App = () => {
                 <Route path="/add-product" element={<AddProduct/>} />
                 <Route path="/shop" element={<ProductList/>} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/chat" element={<ChatPage />} /> 
+                <Route path="/chat/:chatId" element={<ChatWindow />} />
+                <Route path="/product/:id" element={<ProductDetail />} /> {/* Define the product detail route */}           
             </Routes>
         </Router>
     );

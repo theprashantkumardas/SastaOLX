@@ -16,25 +16,20 @@ const mongoose = require('mongoose');
 
 //Define the message Schema
 const messageSchema = new mongoose.Schema({
-    chatId: {                              // ID of the chat the message belongs to
-        type: mongoose.Schema.ObjectId,    // References the Chat model
-        ref: 'Chat',
-        required: true,
+    sender: { 
+        type: mongoose.Schema.ObjectId, 
+        ref: 'User', 
+        required: true 
     },
-    sender: {                              // ID of the user who sent the message
-        type: mongoose.Schema.ObjectId,    // References the User model
-        ref: 'User',
-        required: true,
+    content: { 
+        type: String, 
+        required: true 
     },
-    content: {                              // Message content
-        type: String,                       // Message text
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,                  // Tracks the time message was sent
+    timestamp: { 
+        type: Date, 
+        default: Date.now 
     }
 });
 
 //Export the message model based on the schema
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = messageSchema
