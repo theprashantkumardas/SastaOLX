@@ -17,3 +17,4 @@ router.get('/get-products', authMiddleware, getAllProducts);
 
 module.exports = router; // Exports the router to use in server.js
 
+

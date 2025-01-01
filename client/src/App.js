@@ -24,7 +24,6 @@ const App = () => {
                 <Route path="/shop" element={<ProductList/>} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/chat" element={<ChatPage />} /> 
-                <Route path="/chat/:chatId" element={<ChatWindow />} />
                 <Route path="/product/:id" element={<ProductDetail />} /> {/* Define the product detail route */}           
             </Routes>
         </Router>

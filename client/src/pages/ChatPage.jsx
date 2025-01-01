@@ -8,21 +8,15 @@ const ChatPage = () => {
 
   useEffect(() => {
     // Simulate fetching logged-in user's ID from authentication
-    const fetchUserId = async () => {
-        try {
-          const response = await fetch('/api/auth/user'); // Adjust to match your auth route
-          if (!response.ok) {
-            throw new Error('Failed to fetch user');
-          }
-          const data = await response.json();
-          console.log('Fetched user ID:', data._id);
-          setUserId(data._id);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          // Handle the error, such as setting a fallback state or notifying the user
-        }
-    };
-    fetchUserId();
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (token && user) {
+      setUserId(user._id);
+      console.log(userId);
+    } else {
+       console.log("user not found")
+    }
   }, []);
 
   return (

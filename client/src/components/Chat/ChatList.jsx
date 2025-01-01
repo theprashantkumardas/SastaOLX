@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+
+const socket = io("http://localhost:7000");
 
 const ChatList = ({ userId, onSelectChat }) => {
   const [chats, setChats] = useState([]);
+
+    useEffect(() => {
+      if(!userId) return;
+        socket.emit("setup", { _id: userId });
+    },[userId])
 
   useEffect(() => {
     // Fetch seller chats
     const fetchChats = async () => {
         try {
-          const response = await fetch('/api/chats/seller-chats', {
+           
+           
+          const response = await fetch('http://localhost:7000/api/chat/seller-chats', {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
           });
           if (!response.ok) {
@@ -36,6 +46,7 @@ const ChatList = ({ userId, onSelectChat }) => {
         >
           <h3 className="font-semibold">{chat.buyer.name}</h3>
           <p className="text-sm text-gray-500">{chat.product.name}</p>
+             {chat.latestMessage && <p className="text-sm text-gray-500">{chat.latestMessage.sender.name} : {chat.latestMessage.content}</p>}
         </div>
       ))}
     </div>

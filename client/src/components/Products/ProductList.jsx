@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if(storedUser) {
+         const user = JSON.parse(storedUser);
+         setUserId(user._id);
+         console.log(userId);
+      } else {
+          console.log("User Not found");
+          setLoading(false);
+      }
+  }, []);
+
   // Fetch products from the server
   useEffect(() => {
     const fetchProducts = async () => {
@@ -32,10 +47,10 @@ const ProductList = () => {
   }, []); // Run once after the component mounts
 
   const handleProductClick = (product) => {
-    navigate(`/product/${product._id}`, { state: { product , userId: "currentUserId"} });
+    navigate(`/product/${product._id}`, { state: { product, userId: userId} });
   };
 
-   return (
+  return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-wrap justify-center">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center w-full">
         Product List
@@ -43,7 +58,10 @@ const ProductList = () => {
       {message && (
         <p className="text-center text-red-600 font-medium w-full">{message}</p>
       )}
-      {products?.length > 0 ? (
+        {loading ? (
+            <p className="text-center text-gray-500 w-full">Loading products...</p>
+           ) : (
+      products?.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
           {products.map((product) => (
             <div
@@ -74,8 +92,8 @@ const ProductList = () => {
         </div>
       ) : (
         <p className="text-center text-gray-500 w-full">No products available</p>
-      )}
-    </div>
+      ))}
+        </div>
   );
 };
 

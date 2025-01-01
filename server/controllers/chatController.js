@@ -1,44 +1,60 @@
 const Chat = require('../models/Chat');
 const Message = require('../models/Message');
+const Product = require('../models/Product')
 
 const initiateChat = async (req, res) => {
     try {
+        console.log('Initiate Chat Request Received:', req.body);
+        console.log('User from authMiddleware:', req.user);
+
         const { buyerId, productId } = req.body;
         const sellerId = req.user._id; // Assuming logged-in user is the seller.
 
+        if(!buyerId || !productId) {
+            return res.status(400).json({ error: 'BuyerId or Product Id was not present' });
+       }
+
         // Check if chat already exists
         let chat = await Chat.findOne({ buyer: buyerId, seller: sellerId, product: productId });
-        const product = await Product.findById(productId);
-        product.chatId = chat._id;
-        await product.save();
-        
+
+        console.log('Chat before create:', chat);
+
         if (!chat) {
             // Create a new chat if it doesn't exist
             chat = new Chat({
                 buyer: buyerId,
                 seller: sellerId,
                 product: productId,
-                messages: [],
             });
             await chat.save();
+            console.log("Chat after Create: ", chat);
+
+            
         }
 
         res.status(200).json({ chatId: chat._id }); // Return the chatId
+        console.log("Returning chat id" , chat._id);
     } catch (error) {
+        console.error("Initiate Chat Error: ", error);
         res.status(500).json({ error: 'Failed to initiate chat.' });
     }
 };
 
-
-// Fetch all chats for the logged-in seller
 const getSellerChats = async (req, res) => {
     try {
-        const sellerId = req.user._id; // Assuming req.user contains the logged-in user
+        const sellerId = req.user._id;
+      
         const chats = await Chat.find({ seller: sellerId })
-            .populate('buyer', 'name') // Populate buyer's name
-            .populate('product', 'name') // Populate product name
-            .populate('messages', 'content timestamp') // Include last messages
-            .sort({ 'messages.timestamp': -1 }); // Sort by last message timestamp
+            .populate('buyer', 'name')
+            .populate('product', 'name')
+           .populate({
+             path: 'latestMessage',
+             populate: {
+                path: 'sender',
+                select: 'name email'
+             }
+           })
+            .sort({ updatedAt: -1 });
 
         res.status(200).json(chats);
     } catch (error) {
@@ -46,62 +62,61 @@ const getSellerChats = async (req, res) => {
     }
 };
 
-// Fetch messages for a specific chat
+
 const getMessagesForChat = async (req, res) => {
     try {
         const { chatId } = req.params;
 
-        // Validate `chatId`
         if (!chatId) {
             return res.status(400).json({ error: 'Chat ID is required.' });
         }
 
-        const chat = await Chat.findById(chatId).populate('messages.sender', 'name email').populate('messages');  // Populating sender informationpopulate('messages');
+        const messages = await Message.find({ chatId: chatId}).populate('sender', 'name email').sort({createdAt: 1})
 
-        if (!chat) {
-            return res.status(404).json({ error: 'Chat not found.' });
-        }
-
-        res.status(200).json(chat.messages);
+        res.status(200).json(messages);
     } catch (error) {
-        console.error(error); // Added logging to debug errors
+        console.error(error);
         res.status(500).json({ error: 'Failed to fetch messages.' });
     }
 };
 
-// Send a message in a chat
+
 const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
         const { content } = req.body;
 
-        if (!chatId) {
-            return res.status(400).json({ error: 'Chat ID is required.' });
-        }
+         if (!chatId) {
+              return res.status(400).json({ error: 'Chat ID is required.' });
+          }
+
 
         const sender = req.user._id;
 
-        const newMessage = {
+
+        const message = new Message({
+            chatId,
             sender,
             content,
-            timestamp: new Date(),
-        };
+        });
+
+        await message.save();
 
         const chat = await Chat.findByIdAndUpdate(
-            chatId,
-            { $push: { messages: newMessage } }, // Add new message
-            { new: true }
-        );
+             chatId,
+            {
+                latestMessage: message._id,
+            },
+             { new: true }
+        )
 
-        if (!chat) {
-            return res.status(404).json({ error: 'Chat not found.' });
-        }
 
-        res.status(201).json(newMessage);
+        res.status(201).json(message);
+
     } catch (error) {
-        console.error(error); // Added logging to debug errors
+        console.error(error);
         res.status(500).json({ error: 'Failed to send message.' });
     }
 };
 
-module.exports = {initiateChat, getSellerChats, getMessagesForChat, sendMessage };
+module.exports = { initiateChat, getSellerChats, getMessagesForChat, sendMessage };

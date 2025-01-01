@@ -1,18 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {   useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const ProductDetail = () => {
     const navigate = useNavigate();
     // const { id } = useParams(); // Get product ID from URL
     const { state } = useLocation();
-    const { product, userId } = state || {}; // Retrieve product and userId
+    const { product } = state || {}; // Retrieve product and userId
+    // const { product, userId: userIdFromProductList } = state || {}; // Retrieve product and userId
+    const [userId, setUserId] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if(storedUser) {
+           const user = JSON.parse(storedUser);
+           setUserId(user._id);
+           console.log(setUserId);
+        } else {
+            console.log("User Not found");
+        }
+        setLoading(false);
+    }, []);
 
     if (!product) {
         return <p>Product details not available.</p>; // Handle missing product
     }
 
-    const handleChat = () => {
-        navigate(`/chat/${product.chatId}`, { state: { chatId: product.chatId, userId } });
+    const handleChat = async () => {
+          try {
+                console.log('Sending request with: ', {buyerId: userId, productId: product._id}) // added log
+
+                const response = await axios.post(`http://localhost:7000/api/chat`, {
+                    buyerId: userId,
+                    productId: product._id
+                },{
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if(response.data.chatId){
+                        navigate(`/chat`, { });
+                } else {
+                        console.log("Couldnt create chat");
+                }
+          } catch (error) {
+               console.log(error)
+          }
     };
 
     return (

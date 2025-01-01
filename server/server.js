@@ -42,9 +42,14 @@ app.use('/api/chat', chatRoutes);  //Api routes for chat
 
 //Set the server to listen o-n a specific port (using environment variable or default 8000)
 const PORT = process.env.PORT || 7000;
-app.listen(PORT, () =>{
-    console.log("Server is running at port : ", PORT)
+// app.listen(PORT, () =>{
+//     console.log("Server is running at port : ", PORT)
 
-});
+// });
 
 setupSocket(server); // Set up socket.io
+
+//USE SERVER.LISTEN INSTEAD OF APP.LISTEN
+server.listen(PORT, () =>{
+    console.log("Server is running at port : ", PORT)
+});

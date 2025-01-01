@@ -1,27 +1,25 @@
 const mongoose = require('mongoose');
-const messageSchema = require('./Message');
 
 const chatSchema = new mongoose.Schema({
-    buyer: { 
-        type: mongoose.Schema.ObjectId, 
-        ref: 'User', 
-        required: true 
+    buyer: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
     },
-    seller: { 
-        type: mongoose.Schema.ObjectId, 
-        ref: 'User', 
-        required: true 
+    seller: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
     },
-    product: { 
-        type: mongoose.Schema.ObjectId, 
-        ref: 'Product', 
-        required: true 
+    product: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Product',
+        required: true
     },
-    messages: [messageSchema],
-    lastMessage: { 
-        type: String, 
-        default: ''  // Stores a preview of the most recent message
+    latestMessage: { //Reference to the latest message
+        type: mongoose.Schema.ObjectId,
+        ref: 'Message',
     },
-}, { timestamps: true }); // Automatically adds createdAt and updatedAt
+}, { timestamps: true });
 
 module.exports = mongoose.model('Chat', chatSchema);
