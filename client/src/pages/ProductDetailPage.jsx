@@ -16,7 +16,7 @@ const ProductDetail = () => {
         if(storedUser) {
            const user = JSON.parse(storedUser);
            setUserId(user._id);
-           console.log(setUserId);
+           console.log(user._id);
         } else {
             console.log("User Not found");
         }
@@ -28,6 +28,7 @@ const ProductDetail = () => {
     }
 
     const handleChat = async () => {
+        if(!product) return console.log("No product found");
           try {
                 console.log('Sending request with: ', {buyerId: userId, productId: product._id}) // added log
 

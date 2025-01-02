@@ -14,6 +14,7 @@ const ChatList = ({ userId, onSelectChat }) => {
   useEffect(() => {
     // Fetch seller chats
     const fetchChats = async () => {
+      if(!userId) return;
         try {
            
            

@@ -5,6 +5,7 @@ import ChatWindow from '../components/Chat/ChatWindow';
 const ChatPage = () => {
   const [selectedChat, setSelectedChat] = useState(null); // Stores the currently selected chat
   const [userId, setUserId] = useState(null); // Logged-in user's ID
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     // Simulate fetching logged-in user's ID from authentication
@@ -14,8 +15,10 @@ const ChatPage = () => {
     if (token && user) {
       setUserId(user._id);
       console.log(userId);
+      setLoading(false);
     } else {
        console.log("user not found")
+       setLoading(false);
     }
   }, []);
 
@@ -23,7 +26,8 @@ const ChatPage = () => {
     <div className="flex h-screen">
       {/* Left-side Chat List */}
       <div className="w-1/3 border-r">
-        <ChatList userId={userId} onSelectChat={setSelectedChat} />
+          {loading ? (<p>Loading...</p>):(<ChatList userId={userId} onSelectChat={setSelectedChat} />)}
+
       </div>
 
       {/* Right-side Chat Window */}

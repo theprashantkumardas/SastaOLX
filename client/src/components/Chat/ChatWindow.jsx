@@ -6,6 +6,7 @@ const socket = io("http://localhost:7000");
 const ChatWindow = ({ chat, userId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
 
     useEffect(() => {
         if (!chat || !chat._id) {
@@ -13,12 +14,15 @@ const ChatWindow = ({ chat, userId }) => {
             return;
         }
 
-       socket.emit("joinChat", chat._id);
+        if(!userId) return;
 
-    }, [chat]);
+       socket.emit("joinChat", chat._id);
+       setLoading(false);
+
+    }, [chat, userId]);
     
     useEffect(() => {
-        if(!chat) return;
+        if(!chat || !userId) return;
 
          // Fetch messages for the selected chat
         const fetchMessages = async () => {
@@ -34,7 +38,7 @@ const ChatWindow = ({ chat, userId }) => {
             }
         };
         fetchMessages();
-     }, [chat])
+     }, [chat , userId])
 
     useEffect(() => {
            socket.on("receiveMessage", (message) => {
@@ -48,7 +52,7 @@ const ChatWindow = ({ chat, userId }) => {
 
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !chat) return;
+    if (!newMessage.trim() || !chat || !userId) return;
     try {
             const response = await fetch(`http://localhost:7000/api/chat/${chat._id}/messages`, {
             method: 'POST',
@@ -77,7 +81,10 @@ const ChatWindow = ({ chat, userId }) => {
     <div className="flex flex-col h-full">
       {/* Chat Messages */}
       <div className="flex-grow overflow-y-auto p-4">
-        {messages.map((message) => (
+        {loading ? (
+                <p>Loading...</p>
+            ) : (
+          messages.map((message) => (
           <div
             key={message._id}
             className={`mb-2 ${
@@ -92,7 +99,8 @@ const ChatWindow = ({ chat, userId }) => {
                  {message.sender.name} : {message.content}
             </div>
           </div>
-        ))}
+        ))
+            )}
       </div>
 
       {/* Message Input */}
