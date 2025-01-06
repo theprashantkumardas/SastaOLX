@@ -18,10 +18,11 @@ module.exports = (allowedRoles) => {
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                                                                                                                  //              
 //        How It Works:
-//        Purpose: This middleware is used to restrict access to routes based on the user's role. It ensures that only users with certain roles (e.g., seller, buyer, both) can access specific routes.
+//        Purpose: This middleware is used to restrict access to routes based on the user's role. 
+                //It ensures that only users with certain roles (e.g., seller, buyer, both) can access specific routes.
     
 //        Functionality:
     
