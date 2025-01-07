@@ -30,6 +30,8 @@ const Register = () => {
         formData
       ); // Send data to the backend
       setMessage("User registered successfully"); // Success message
+      localStorage.setItem('token', response.data.token); // Store the token in local storage
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Store the user object in local storage
 
       navigate("/shop");// Redirect to Add Product page
     } catch (error) {

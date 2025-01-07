@@ -26,6 +26,26 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId, // Reference to the Chat model
         ref: 'Chat',
         
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: [
+            'electronics',
+            'vehicles',
+            'real-estate',
+            'home-furniture',
+            'fashion-beauty',
+            'books-sports-hobbies',
+            'jobs',
+            'services',
+            'pets-animals',
+            'miscellaneous'
+        ]
+    },
+    subcategory: {
+        type: String,
+        required: false // Optional field
     }
 });
 

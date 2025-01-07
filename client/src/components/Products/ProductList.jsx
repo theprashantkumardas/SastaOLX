@@ -6,20 +6,26 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-    const [userId, setUserId] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  // const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-      const storedUser = localStorage.getItem("user");
-      if(storedUser) {
-         const user = JSON.parse(storedUser);
-         setUserId(user._id);
-         console.log(userId);
-      } else {
-          console.log("User Not found");
-          setLoading(false);
-      }
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserId(user._id);
+      console.log(user._id);
+      console.log(userId);
+    } else {
+      console.log("User Not found");
+      // setLoading(false);
+    }
   }, []);
+
+  // useEffect(()=>{  // This is synchronous, and logs before change.
+  useEffect(()=>{
+    console.log("User ID after setUserId", userId);  // This is asynchronous, and logs after change.
+  }, [userId])
 
   // Fetch products from the server
   useEffect(() => {
@@ -47,7 +53,7 @@ const ProductList = () => {
   }, []); // Run once after the component mounts
 
   const handleProductClick = (product) => {
-    navigate(`/product/${product._id}`, { state: { product, userId: userId} });
+    navigate(`/product/${product._id}`, { state: { product, userId: userId } });
   };
 
   return (
@@ -58,10 +64,7 @@ const ProductList = () => {
       {message && (
         <p className="text-center text-red-600 font-medium w-full">{message}</p>
       )}
-        {loading ? (
-            <p className="text-center text-gray-500 w-full">Loading products...</p>
-           ) : (
-      products?.length > 0 ? (
+      { products?.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
           {products.map((product) => (
             <div
@@ -92,8 +95,8 @@ const ProductList = () => {
         </div>
       ) : (
         <p className="text-center text-gray-500 w-full">No products available</p>
-      ))}
-        </div>
+      )}
+    </div>
   );
 };
 

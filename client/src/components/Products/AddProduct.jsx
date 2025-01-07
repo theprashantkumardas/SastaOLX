@@ -1,58 +1,84 @@
-import React, { useEffect, useState  } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
-  const navigate = useNavigate(); // Hook for navigation
-  
-  // State to hold the product details
+  const navigate = useNavigate();
+
+  // State to hold product details, categories, and subcategories
   const [product, setProduct] = useState({
     name: "",
     price: "",
     description: "",
+    category: "",
+    subcategory: "",
   });
+  const [categories, setCategories] = useState([]); // List of categories
+  const [subcategories, setSubcategories] = useState([]); // List of subcategories for selected category
   const [message, setMessage] = useState("");
 
-  // Check for authentication on component load
+  // Check for authentication and fetch categories on component load
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/register"); // Redirect to register if not authenticated
+      navigate("/register");
+      return;
     }
+
+    // Fetch categories
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:7000/api/product/categories");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error.response?.data || error.message);
+      }
+    };
+
+    fetchCategories();
   }, [navigate]);
 
+  // Fetch subcategories when category changes
+  const handleCategoryChange = async (e) => {
+    const selectedCategory = e.target.value;
+    setProduct({ ...product, category: selectedCategory, subcategory: "" });
 
-  // Function to handle input change
+    if (selectedCategory) {
+      try {
+        const response = await axios.get(
+          `http://localhost:7000/api/product/subcategories?category=${selectedCategory}`
+        );
+        setSubcategories(response.data);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error.response?.data || error.message);
+        setSubcategories([]);
+      }
+    } else {
+      setSubcategories([]);
+    }
+  };
+
+  // Handle input changes for other fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input changed: ${name} = ${value}`); // Debugging the input values
     setProduct({ ...product, [name]: value });
   };
 
-  // Function to handle form submit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting product:", product); // Log product data before submitting
     try {
-      const token = localStorage.getItem("token"); // Retrieve token from local storage
-      console.log("Token being sent:", token);
-      
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:7000/api/product/add",
         product,
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the header
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("Response: ", response.data); // Log the response data
-      setMessage("Product added successfully"); // Set the message to be displayed on successful product addition
+      setMessage("Product added successfully");
     } catch (error) {
-      console.error(
-        "Error adding product: ",
-        error.response?.data || error.message
-      ); // Log the error
+      console.error("Error adding product:", error.response?.data || error.message);
       setMessage("Failed to add product");
     }
   };
@@ -91,6 +117,35 @@ const AddProduct = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
             rows="4"
           />
+          <select
+            name="category"
+            value={product.category}
+            onChange={handleCategoryChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <select
+            name="subcategory"
+            value={product.subcategory}
+            onChange={handleChange}
+            required
+            disabled={!product.category}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          >
+            <option value="">Select Subcategory</option>
+            {subcategories.map((subcategory) => (
+              <option key={subcategory._id} value={subcategory.name}>
+                {subcategory.name}
+              </option>
+            ))}
+          </select>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
@@ -101,9 +156,7 @@ const AddProduct = () => {
         {message && (
           <p
             className={`mt-4 text-center ${
-              message.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600"
+              message.includes("successfully") ? "text-green-600" : "text-red-600"
             }`}
           >
             {message}

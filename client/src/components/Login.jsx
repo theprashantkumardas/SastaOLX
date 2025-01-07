@@ -1,9 +1,11 @@
 import React, { useState }  from "react";
 import apiClient from "../api/apiClient";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 //Login component to login a user
 const Login = () => {
+    const navigate = useNavigate();
     const [formData , setFormData] = useState({
         email: '',
         password: '',
@@ -24,6 +26,9 @@ const Login = () => {
             const response = await axios.post('http://localhost:7000/api/auth/login', formData); //Send Logn data to the backend by binding with "formData"through the "login" api route
             setMessage("User logged in successfully"); //Set the message to be displayed on successful login
             localStorage.setItem('token', response.data.token); //Store the token in local storage
+            localStorage.setItem('user', JSON.stringify(response.data.user)); //Store the user object in local storage
+            
+            // navigate("/shop");// Redirect to Add Product page
         } catch (error) {
             setMessage(error.response.data.message || "Login failed"); //Set the message to be displayed on failed login
         }

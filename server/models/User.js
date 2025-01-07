@@ -23,7 +23,13 @@ const userSchema = new mongoose.Schema({
     profileImage: {  // Optional, if you want users to upload a profile image
         type: String,
         default: ''  // Default image URL or empty if no profile image is set
-    }
+    },
+    addToCart: [
+        {
+            productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+            quantity: { type: Number, default: 1 }, // Optional, for quantity
+        }
+    ]
 });
 
 //Create and export the user model based on the schema

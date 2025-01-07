@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import ChatPage from './pages/ChatPage';
 import ProductDetail from "./pages/ProductDetailPage"; 
 import ChatWindow from './components/Chat/ChatWindow';
+import CartPage from "./pages/CartPage.jsx";
+
 
 // Main App Component
 const App = () => {
@@ -24,7 +26,8 @@ const App = () => {
                 <Route path="/shop" element={<ProductList/>} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/chat" element={<ChatPage />} /> 
-                <Route path="/product/:id" element={<ProductDetail />} /> {/* Define the product detail route */}           
+                <Route path="/product/:id" element={<ProductDetail />} /> {/* Define the product detail route */} 
+                <Route path="/cart"element ={<CartPage/>} />        
             </Routes>
         </Router>
     );

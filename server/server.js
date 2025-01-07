@@ -7,6 +7,8 @@ const authRoutes = require('./routes/authRoutes'); //Auth routes (login, registe
 const productRoutes = require('./routes/productRoutes'); //Auth routes (add product
 const userRoutes = require('./routes/userRoutes'); //User routes (profile management)
 const chatRoutes = require('./routes/chatRoutes');
+const cartRoute = require('./routes/cartRoutes');
+
 const {setupSocket} = require('./socket/socket')
 
 
@@ -39,6 +41,7 @@ app.use('/api/auth' , authRoutes); //Handle authentication routes (register, log
 app.use('/api/product' , productRoutes); //Handle product routes (add product)
 app.use('/api/user', userRoutes);  // Register user routes for profile management
 app.use('/api/chat', chatRoutes);  //Api routes for chat
+app.use('/api/cart', cartRoute);  //Api routes for cart
 
 //Set the server to listen o-n a specific port (using environment variable or default 8000)
 const PORT = process.env.PORT || 7000;
