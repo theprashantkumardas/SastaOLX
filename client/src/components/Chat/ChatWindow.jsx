@@ -11,6 +11,7 @@ const ChatWindow = ({ chat, userId }) => {
     useEffect(() => {
         if (!chat || !chat._id) {
             console.error("Invalid chat data:", chat);
+            console.log("chat id" ,chat._id);
             return;
         }
 

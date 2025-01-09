@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import Footer from "../components/Fotter/Fotter";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -78,6 +79,7 @@ const ProductDetail = () => {
 };
 
   return (
+    <>
     <div className="min-h-screen bg-gray-100 p-4 py-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Image Gallery */}
@@ -132,16 +134,16 @@ const ProductDetail = () => {
           </div>
 
           {/* Buttons */}
-          <div className="space-y-4">
+          <div className=" flex items-center gap-2" >
             <button
               onClick={handleAddToCart}
-              className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-14 bg-black text-white py-3 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Add to Cart
             </button>
             <button
               onClick={handleChat}
-              className="w-full bg-gray-800 text-white py-3 rounded-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="w-full h-14 bg-black text-white py-3 rounded-full hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Chat with Seller
             </button>
@@ -163,6 +165,8 @@ const ProductDetail = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 
 //   return (

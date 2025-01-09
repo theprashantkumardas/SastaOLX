@@ -5,10 +5,10 @@ module.exports = (allowedRoles) => {
         const { role } = req.user; // This comes from the authMiddleware
 
         // Check if the user's role is one of the allowed roles
-        if (!allowedRoles.includes(role)) {
-            // If the role is not allowed, deny access and send a '403 Forbidden' response
-            return res.status(403).json({ message: "Forbidden: Insufficient permissions" });
-        }
+        // if (!allowedRoles.includes(role)) {
+        //     // If the role is not allowed, deny access and send a '403 Forbidden' response
+        //     return res.status(403).json({ message: "Forbidden: Insufficient permissions" });
+        // }
 
         // If the role is valid, proceed to the next middleware or route handler
         next();

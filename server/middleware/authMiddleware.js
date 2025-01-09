@@ -5,6 +5,10 @@ const jwt = require('jsonwebtoken'); //Importing JWT module
 //Middleware to check if the user is authenticated
 module.exports = (req, res, next) => {
     // Extract token from the `Authorization` header
+
+    console.log("hello");
+    // ("req.headers",req.headers)
+
     const authHeader = req.headers.authorization; // Get the Authorization header
     const token = authHeader?.split(' ')[1]; // Split to extract the token part after 'Bearer'
     
@@ -14,7 +18,7 @@ module.exports = (req, res, next) => {
 
     }
 
-    try {
+    try { 
         // Verify the token with the secret key and decode it
         const decoded = jwt.verify(token, process.env.JWT_SECRET); //Verify the token with the secret key
         
@@ -28,7 +32,7 @@ module.exports = (req, res, next) => {
 
         next(); //Allow the next middleware or route handler to run
 
-    } catch (error) {
+    } catch (error) { // Catch any errors during token verification
         console.error('Authentication error:', error.message); // Log errors if token verification fails
         res.status(500).json({ message: "Invalid token"}); //If token is invalid , deny access
         

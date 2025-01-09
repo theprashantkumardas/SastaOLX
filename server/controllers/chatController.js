@@ -8,12 +8,18 @@ const initiateChat = async (req, res) => {
         console.log('User from authMiddleware:', req.user);
 
         const { buyerId, productId } = req.body;
-        const sellerId = req.user._id; // Assuming logged-in user is the seller.
+        // const sellerId = req.user.userId; // Assuming logged-in user is the seller.
+        const sellerId = product.sellerId; // Correct way to get seller id from product.
 
+        console.log("Buyer:" , buyerId);
+        console.log("Product:" , productId);
+        console.log("Seller:" , sellerId);
+        
         if(!buyerId || !productId) {
             return res.status(400).json({ error: 'BuyerId or Product Id was not present' });
        }
 
+       console.log("Before FindOne");
         // Check if chat already exists
         let chat = await Chat.findOne({ buyer: buyerId, seller: sellerId, product: productId });
 
@@ -26,12 +32,14 @@ const initiateChat = async (req, res) => {
                 seller: sellerId,
                 product: productId,
             });
+            console.log("Before chat save")
             await chat.save();
             console.log("Chat after Create: ", chat);
 
             
         }
 
+        console.log("Before returning chat Id");
         res.status(200).json({ chatId: chat._id }); // Return the chatId
         console.log("Returning chat id" , chat._id);
     } catch (error) {

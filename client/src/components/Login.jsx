@@ -1,7 +1,9 @@
 import React, { useState }  from "react";
+import Footer from "./Fotter/Fotter";
 import apiClient from "../api/apiClient";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 
 //Login component to login a user
 const Login = () => {
@@ -36,13 +38,14 @@ const Login = () => {
     };
 
     return(
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Login</h2>
+      <>
+        <div className="flex justify-center  bg-gray-50">
+      <div className="w-full my-12 mx-4  h-1/4 max-w-md bg-white p-8 rounded-3xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-black mb-6">Login</h2>
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+            <label htmlFor="email" className="block text-sm font-medium">
               Email Address
             </label>
             <input
@@ -58,7 +61,7 @@ const Login = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+            <label htmlFor="password" className="block text-sm font-medium ">
               Password
             </label>
             <input
@@ -76,7 +79,7 @@ const Login = () => {
           <div className="mb-6">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 text-white bg-black rounded-full hover:bg-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Login
             </button>
@@ -90,6 +93,9 @@ const Login = () => {
       {message && <p>{message}</p>} {/* Show success or error message */}
 
     </div>
+    <Footer/>
+    </>
+
 
     );
 

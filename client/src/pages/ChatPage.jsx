@@ -20,7 +20,8 @@ const ChatPage = () => {
        console.log("user not found")
        setLoading(false);
     }
-  }, []);
+    console.log("user id ", userId)
+  }, [userId]);
 
   return (
     <div className="flex h-screen">

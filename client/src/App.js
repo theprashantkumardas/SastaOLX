@@ -10,6 +10,7 @@ import ChatPage from './pages/ChatPage';
 import ProductDetail from "./pages/ProductDetailPage"; 
 import ChatWindow from './components/Chat/ChatWindow';
 import CartPage from "./pages/CartPage.jsx";
+import Home from './pages/Home.jsx';
 
 
 // Main App Component
@@ -19,7 +20,7 @@ const App = () => {
             <Navbar/>
             <Routes>
                 {/* These routes are for frontend navigation in top search bar */}
-                <Route path="/" element = {<h1>Welcome to E_Commerce Platform</h1>} />
+                <Route path="/" element = {<Home/>}/>
                 <Route path="/register" element = {<Register/>} />
                 <Route path="/login" element = {<Login/>} />
                 <Route path="/add-product" element={<AddProduct/>} />

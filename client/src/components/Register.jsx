@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import Footer from "./Fotter/Fotter";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 
 // Register component to register a new user
 const Register = () => {
@@ -40,9 +42,10 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+    <>
+    <div className="flex  justify-center  bg-gray-50">
+      <div className="w-full my-12 max-w-md mx-4  h-1/4  sm:mx-auto bg-white p-8 rounded-3xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-blaack mb-6">
           Register
         </h2>
 
@@ -50,7 +53,7 @@ const Register = () => {
           <div className="mb-4">
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium "
             >
               Full Name
             </label>
@@ -68,7 +71,7 @@ const Register = () => {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium "
             >
               Email Address
             </label>
@@ -86,7 +89,7 @@ const Register = () => {
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium "
             >
               Password
             </label>
@@ -104,7 +107,7 @@ const Register = () => {
           <div className="mb-4">
             <label
               htmlFor="role"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium "
             >
               Select Role
             </label>
@@ -125,22 +128,24 @@ const Register = () => {
           <div className="mb-6">
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 text-white bg-black rounded-full hover:bg-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Register
             </button>
           </div>
         </form>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm ">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-black font-semibold hover:underline">
             Log in
           </a>
         </p>
       </div>
       {message && <p className="text-center mt-4 text-green-600">{message}</p>}
     </div>
+    <Footer/>
+    </>
   );
 };
 
